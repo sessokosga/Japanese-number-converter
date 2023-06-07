@@ -83,7 +83,7 @@ pub fn less_than_1000(number: usize) -> (String, String, String) {
         let hundred = number / 100;
         // Prevent "hyaku juu" when got "10" as input
         if hundred > 0 {
-            // Prevent ichi hyaku
+            // Prevent "ichi hyaku"
             if hundred > 1 {
                 result_romaji += UNITS_ROMAJI[hundred];
                 result_romaji += " ";
@@ -115,20 +115,43 @@ pub fn less_than_1000(number: usize) -> (String, String, String) {
     (result_kanji, result_katakana, result_romaji)
 }
 
-// pub fn less_than_10k(number: usize) -> (String, String, String) {
-//     let mut result_katakana = String::new();
-//     let mut result_romaji = String::new();
-//     let mut result_kanji = String::new();
+pub fn less_than_10k(number: usize) -> (String, String, String) {
+    let mut result_katakana = String::new();
+    let mut result_romaji = String::new();
+    let mut result_kanji = String::new();
 
-//     if number < 1000 {
+    if number < 10000 {
+        let thousand = number / 1000;
+        // Prevent "sen juu" when got "10" as input
+        if thousand > 0 {
+            // Prevent "ichi sen"
+            if thousand > 1 {
+                result_romaji += UNITS_ROMAJI[thousand];
+                result_romaji += " ";
 
-//     }
+                result_kanji += UNITS_KANJI[thousand];
 
-//     let left = number - hundred * 100;
-//     if left > 0 {
-//         let res = less_than_100(number % 100);
-//         result_kanji += &res.0;
-//         result_katakana += &res.1;
-//         result_romaji += &res.2;
-//     }
-// }
+                result_katakana += UNITS_KATAKANA[thousand];
+                result_katakana += " ";
+            }
+
+            result_romaji += "sen";
+            result_romaji += " ";
+
+            result_kanji += "千";
+            result_romaji += " ";
+
+            result_katakana += "セン";
+            result_katakana += " ";
+        }
+
+        let left = number - thousand * 1000;
+        if left > 0 {
+            let res = less_than_1000(number % 1000);
+            result_kanji += &res.0;
+            result_katakana += &res.1;
+            result_romaji += &res.2;
+        }
+    }
+    (result_kanji, result_katakana, result_romaji)
+}
