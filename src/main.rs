@@ -1,5 +1,9 @@
-mod convert;
+mod japanese_number;
+use japanese_number::JapaneseNumber;
+
 fn main() {
-    let num = convert::less_than_10k(9999);
-    println!("1  =>  {}  =>  {}  =>  {}",num.0,num.1,num.2);
+    // let num = 2_0000_0000;
+    let num = 1_0001;    
+    let result = JapaneseNumber::convert(num);
+    println!("{}  =>  {}  =>  {}  =>  {}",result.arabiasuji(),result.kanji(),result.katakana(),result.romaji());
 }
