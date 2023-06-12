@@ -2,6 +2,13 @@
 name = "japanese_number_converter"
 version = "0.1.0"
 edition = "2021"
+description="A lib to convert numbers into japanese"
+license="MIT"
+readme="Readme.md"
+author="Sesso Kosga"
+repository=""
+license-file="LICENCE"
+keywords=["japanese", "converter","katakana","kanji","romaji"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
