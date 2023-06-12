@@ -1,8 +1,12 @@
 [package]
-name = "jap_ntl"
+name = "japanese_number_converter"
 version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+name="japanese_number_converter"
+path="src/japanese_number_converter.rs"
 
 [dependencies]

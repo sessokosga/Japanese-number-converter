@@ -46,6 +46,7 @@ const UNITS_KANJI: [&str; 11] = [
     "零", "一", "ニ", "三", "四", "五", "六", "七", "八", "九", "十",
 ];
 
+/// Convert numbers less than 11
 fn less_than_11(number: usize) -> JapaneseNumber {
     let mut result_katakana = String::new();
     let mut result_romaji = String::new();
