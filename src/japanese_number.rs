@@ -1,13 +1,13 @@
-pub struct JapaneseNumber{
-    arabiasuji:usize,
-    kanji:String,
-    romaji:String,
-    katakana:String
+pub struct JapaneseNumber {
+    arabiasuji: usize,
+    kanji: String,
+    romaji: String,
+    katakana: String,
 }
 
 impl JapaneseNumber {
-    pub fn convert(number:usize) -> JapaneseNumber{
-        convert(number)
+    pub fn convert(number: usize) -> JapaneseNumber {
+        over_10k(number)
     }
     pub fn arabiasuji(&self) -> usize {
         self.arabiasuji
@@ -21,14 +21,13 @@ impl JapaneseNumber {
     pub fn katakana(&self) -> &String {
         &self.katakana
     }
-    
 }
-const PACKS_ROMAJI: [&str; 5] = ["man", "oku", "chō", "kei", "gai"];
-const PACKS_KANJI: [&str; 5] = ["万", "億", "兆", "京", "垓"];
-const PACKS_KATAKANA: [&str; 5] = ["マン", "オク", "チョオ", "ケイ", "ガイ"];
+const PACKS_ROMAJI: [&str; 4] = ["man", "oku", "chō", "kei"];
+const PACKS_KANJI: [&str; 4] = ["万", "億", "兆", "京"];
+const PACKS_KATAKANA: [&str; 4] = ["マン", "オク", "チョオ", "ケイ"];
 
 const UNITS_ROMAJI: [&str; 11] = [
-    "ré", "ichi", "ni", "san", "yon", "go", "roku", "nana", "hachi", "kyū", "jū",
+    "rei", "ichi", "ni", "san", "yon", "go", "roku", "nana", "hachi", "kyū", "jū",
 ];
 const UNITS_KATAKANA: [&str; 11] = [
     "レ",
@@ -44,7 +43,7 @@ const UNITS_KATAKANA: [&str; 11] = [
     "ジュウ",
 ];
 const UNITS_KANJI: [&str; 11] = [
-    "れ", "一", "ニ", "三", "四", "五", "六", "七", "八", "九", "十",
+    "零", "一", "ニ", "三", "四", "五", "六", "七", "八", "九", "十",
 ];
 
 fn less_than_11(number: usize) -> JapaneseNumber {
@@ -57,7 +56,12 @@ fn less_than_11(number: usize) -> JapaneseNumber {
         result_katakana += UNITS_KATAKANA[number];
     }
 
-    JapaneseNumber { arabiasuji: number, kanji: result_kanji, romaji: result_romaji, katakana: result_katakana }
+    JapaneseNumber {
+        arabiasuji: number,
+        kanji: result_kanji,
+        romaji: result_romaji,
+        katakana: result_katakana,
+    }
 }
 
 fn less_than_100(number: usize) -> JapaneseNumber {
@@ -100,7 +104,12 @@ fn less_than_100(number: usize) -> JapaneseNumber {
         }
     }
 
-    JapaneseNumber { arabiasuji: number, kanji: result_kanji, romaji: result_romaji, katakana: result_katakana }
+    JapaneseNumber {
+        arabiasuji: number,
+        kanji: result_kanji,
+        romaji: result_romaji,
+        katakana: result_katakana,
+    }
 }
 
 fn less_than_1000(number: usize) -> JapaneseNumber {
@@ -141,7 +150,12 @@ fn less_than_1000(number: usize) -> JapaneseNumber {
         }
     }
 
-    JapaneseNumber { arabiasuji: number, kanji: result_kanji, romaji: result_romaji, katakana: result_katakana }
+    JapaneseNumber {
+        arabiasuji: number,
+        kanji: result_kanji,
+        romaji: result_romaji,
+        katakana: result_katakana,
+    }
 }
 
 fn less_than_10k(number: usize) -> JapaneseNumber {
@@ -182,38 +196,56 @@ fn less_than_10k(number: usize) -> JapaneseNumber {
             result_romaji += &res.romaji;
         }
     }
-    JapaneseNumber { arabiasuji: number, kanji: result_kanji, romaji: result_romaji, katakana: result_katakana }
+    JapaneseNumber {
+        arabiasuji: number,
+        kanji: result_kanji,
+        romaji: result_romaji,
+        katakana: result_katakana,
+    }
 }
 
-fn convert(number: usize) -> JapaneseNumber {
-    let mut result_katakana = String::new();
-    let mut result_romaji = String::new();
-    let mut result_kanji = String::new();
+fn over_10k(number: usize) -> JapaneseNumber {
+    let mut result_katakana: Vec<String> = Vec::new();
+    let mut result_romaji: Vec<String> = Vec::new();
+    let mut result_kanji: Vec<String> = Vec::new();
 
-    let mut num = number;
-    let sep = number / 10000;
-    let mut i = 0;
-    
-    if sep < 1_0000_0000 {
-        while num > 0 {
-            let res = less_than_10k(num % 10000);
-            result_kanji += &res.kanji;
-            result_katakana += &res.katakana;
-            result_romaji += &res.romaji;
-
-            result_katakana += " ";
-            result_romaji += " ";
-
-            if i > 0 {
-                result_kanji += PACKS_KANJI[i - 1];
-                result_katakana += PACKS_KATAKANA[i - 1];
-                result_romaji += PACKS_ROMAJI[i - 1];
-            }
-
-            i += 1;
-            num = num / 10000;
-        }
+    if number == 0 {
+        return JapaneseNumber {
+            arabiasuji: number,
+            kanji: UNITS_KANJI[0].to_owned(),
+            romaji: UNITS_ROMAJI[0].to_owned(),
+            katakana: UNITS_KATAKANA[0].to_owned(),
+        };
     }
 
-    JapaneseNumber { arabiasuji: number, kanji: result_kanji, romaji: result_romaji, katakana: result_katakana }
+    let mut num = number;
+    let mut sep = 0;
+
+    while num > 0 {
+        let result = less_than_10k(num % 10000);
+        if sep > 0 {
+            if num % 10000 > 0 {
+                result_romaji.push(result.romaji + " " + PACKS_ROMAJI[sep - 1]);
+                result_katakana.push(result.katakana + PACKS_KATAKANA[sep - 1]);
+                result_kanji.push(result.kanji + PACKS_KANJI[sep - 1]);
+            }
+        } else {
+            result_romaji.push(result.romaji);
+            result_katakana.push(result.katakana);
+            result_kanji.push(result.kanji);
+        }
+        num = num / 10000;
+        sep += 1;
+    }
+
+    result_kanji.reverse();
+    result_katakana.reverse();
+    result_romaji.reverse();
+
+    JapaneseNumber {
+        arabiasuji: number,
+        kanji: result_kanji.join(""),
+        romaji: result_romaji.join(" "),
+        katakana: result_katakana.join(" "),
+    }
 }
