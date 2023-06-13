@@ -6,7 +6,7 @@ description="A lib to convert numbers into japanese"
 license="MIT"
 readme="Readme.md"
 author="Sesso Kosga"
-repository=""
+repository="https://github.com/sessokosga/Japanese-number-converter"
 license-file="LICENCE"
 keywords=["japanese", "converter","katakana","kanji","romaji"]
 

@@ -1,5 +1,5 @@
 //! # Converts a number into japanese
-//! This converter takes a number (u32) in input and return a result of type `JapaneseNumber`.
+//! This converter takes a number in input and return a result of type `JapaneseNumber`.
 //! This type has three properties:
 //! - `arabiasu` : the number given asinput
 //! - `kanji` : the number in kanji format
